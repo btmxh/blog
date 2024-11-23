@@ -12,7 +12,5 @@ theme = 'ananke'
         [markup.goldmark.extensions.passthrough.delimiters]
           block = [['\[', '\]'], ['$$', '$$']]
           inline = [['\(', '\)']]
-[params]
-  math = false
 
 

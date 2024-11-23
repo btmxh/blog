@@ -2,7 +2,6 @@
 title = 'first-post.md'
 date = '2024-11-23T22:49:41+07:00'
 draft = false
-math = true
 +++
 
 So I guess I'll post stuff that I'm interetested in here.
