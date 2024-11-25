@@ -1,7 +1,6 @@
 +++
 date = '2024-11-23T23:39:12+07:00'
 title = 'backprop-1.md'
-draft = true
 +++
 
 ## My earlier attempts with Machine Learning
