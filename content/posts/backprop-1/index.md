@@ -58,7 +58,7 @@ equations, just a good sense of intuition is fine.
 Given a function \(f: V \to W\) that maps from a normed vector space \(V\) to another normed
 vector space \(W\). Wait, what is a normed vector space?
 
-A vector space is simply a space of vector-like objects. Head to
+A **vector space** is simply a space of vector-like objects. Head to
 [Wikipedia](https://en.wikipedia.org/wiki/Vector_space) for the rigorous definition,
 but here I will just explain it intuitvely. Vector-like objects are object you can:
 - add (or subtract) with a vector-like object of the same "type" (in the same space), or
@@ -76,7 +76,7 @@ Then,
 Now, if we add some division operation to our definition above, everything completely broke
 down. There is just no conventional way to divide vectors or even matrices.
 
-Next, we define a norm as a measure of distance from some origin (the zero vector),
+Next, we define a **norm** as a measure of distance from some origin (the zero vector),
 denoted as \(\|\cdot\|\), such that:
 
 - Norm of a vector must be always non-negative: \( \|\mathbf{v}\| \ge 0 \). Moreover,
@@ -89,8 +89,8 @@ Then, a normed vector space is just a vector space with a defined norm. With tha
 we can go back to the definition.
 
 Given a function \(f: V \to W\) that maps from a normed vector space \(V\) to another normed
-vector space \(W\) and a point \( \mathbf{v} \in V \). Then, if a linear map \( L: V \to W \)
-is called the derivative of \( f \) at \( \mathbf{v} \) iff this limit exists and holds:
+vector space \(W\) and a point \( \mathbf{v} \in V \). Then, a linear map \( L: V \to W \)
+is called the **(Fréchet) derivative** of \( f \) at \( \mathbf{v} \) iff this limit exists and holds:
 
 \[ \lim_{d \mathbf{v} \to 0} \frac{\|f(\mathbf{v} + d \mathbf{v}) - f(\mathbf{v}) - L(d \mathbf{v})\|}{\|d \mathbf{v}\|} = 0. \]
 
@@ -101,7 +101,7 @@ When I say \( L \) is a linear map, it means that you can do stuff like
 \( L(\mathbf{x} + \mathbf{y}) = L(\mathbf{x}) + L(\mathbf{y}) \) and
 \( L(k \mathbf{x}) = k L(\mathbf{x}) \).
 So \( L(d \mathbf{v}) = f(\mathbf{v} + d \mathbf{v}) - f(\mathbf{v}) \),
-even though it satisfies the limit, is not a valid derivative (in most cases).
+even though it satisfies the limit condition, is not a valid derivative (in most cases).
 
 Now, the derivative of a function is a function. Moreover, it's the same kind of function
 as the original one! Why is it this way?
@@ -195,11 +195,18 @@ i.e. the sum of a constant map and a linear map.
 
 This might seem trivial, but I was truly shocked once I realize operations like trace
 (\( \operatorname{tr} \)) and transpose are (\( \cdot^T \)) are linear. It turns out that
-those operations actually belong to the class of easiest operations to differentiate!
+those operations actually belong to the easiest class of operations to differentiate!
 
 ## The heart of Backpropagation: the Chain Rule
 
-The Chain Rule can be stated as follows.
+In Calculus, the **Chain Rule** is probably one of the most differentiation rules. It let us
+find the derivative of a composite function, which effectively allow us to differentiate
+any function.
+
+For Backpropagation, the Chain Rule is oftenly considered the **heart** of this algorithm.
+Backpropagation operates on multi-layer perceptrons, which could be thought of as the composition of multiple much simpler functions.
+
+Hence, we need a Chain Rule for Fréchet differentiation. Its statement is as follows.
 
 Given functions \( f: U \to V, g: V \to W \) with \( U, V \) and \( W \) being normed vector spaces.
 For some \( \mathbf{x} \in U \), if \( K \) is the derivative of \( f \) at \( \mathbf{x} \),
@@ -211,16 +218,18 @@ then the composition of \( L \) and \( K \),
 is in fact the derivative of \( h(\mathbf{x}) = g(f(\mathbf{x})) \) at \( \mathbf{x} \),
 assuming that \( K \) and \( L \) is **bounded**.
 
-\( L \) is a bounded linear map is some linear map such that \( \|L(\mathbf{x})\| \) is always
-bounded by \( \alpha \| \mathbf{x} \|\), with \( \alpha \) being an arbitrary constant.
+\( L \) being a bounded linear map means that \( \|L(\mathbf{x})\| \) is always
+bounded by \( \alpha \| \mathbf{x} \|\), with \( \alpha \) being some globally chosen
+constant (\( alpha \) does not depend on \( \mathbf{x} \)).
 If the domain and codomain of a linear map is finite-dimensional, then it is bounded.
-This result is pretty complicated, so I will just prove it for the norm that we are going to
-use: the Euclidean norm. The same logic also applies for the Frobenius norm, which will be
-discussed below.
+Since all norms are equivalent (this is a pretty complicated result),
+we just need to prove this result for a specific norm. Here, I will prove it for the Euclidean norm.
 
-If \( \mathbf{x} = \sum_{k=1}^n x_k \mathbf{e}_k \), then
+Let \(  \mathbf{e}_1, \mathbf{e}_2, ..., \mathbf{e}_k\) be an arbitrary basis of the domain vector space, then for every vector \(\mathbf{x}\),
+we can write
+\( \mathbf{x} = \sum_{k=1}^n x_k \mathbf{e}_k \), then
 \( \|L(\mathbf{x})\| \le \sum_{k=1}^n |x_k| \|L(\mathbf{e}_k)\| \le \|\mathbf{x}\| \sum_{k=1}^n \|L(\mathbf{e}_k)\| \).
-Hence, it suffices to just let \( \alpha = \sum_{k=1}^n \|L(\mathbf{e}_k)\| \).
+Hence, it suffices to just let \( \alpha = \sum_{k=1}^n \|L(\mathbf{e}_k)\| \). Note that this value of \( \alpha \) only depends on the basis that we can freely choose.
 
 With boundedness out of the way, we start with the proof.
 We need to prove:
@@ -258,7 +267,7 @@ term is bounded:
 
 The second limit can be split to:
 
-\[ \lim_{d\mathbf{x} \to 0} \left(\frac{\|L(d f - K(d\mathbf{x}))\|}{\|d f - K(d\mathbf{x})\|}\cdot\frac{\|f(\mathbf{x} + d\mathbf{x}) - f(\mathbf{x}) - K(d\mathbf{x})\|}{\|d\mathbf{x}\|}\right) = 0. \]
+\[ \lim_{d\mathbf{x} \to 0} \left(\frac{\|L(d f) - K(d\mathbf{x))\|}{\|d f - K(d\mathbf{x})\|}\cdot\frac{\|f(\mathbf{x} + d\mathbf{x}) - f(\mathbf{x}) - K(d\mathbf{x})\|}{\|d\mathbf{x}\|}\right) = 0. \]
 
 The second term clearly converges, while the first is bounded since \( L \) is bounded and \( df -K(d\mathbf x) \to 0 \) as \( d\mathbf x \to 0 \).
 
@@ -340,11 +349,13 @@ of a point \( \mathbf{x} \), then that function has a derivative at \( \mathbf{x
 
 ## Derivative of the squared Frobenius norm
 
-Now, we will utilize everything we proved above.
+Now, we will utilize everything we proved above in this elegant result.
 
 The squared Frobenius norm of a \( m \times n \) matrix is defined as:
 
 \[ \|M\|^2 = \sum_{k = 1}^m \sum_{l = 1}^n M_{kl}^2 \]
+
+This is a generalization of the squared Euclidean norm, which arises in loss functions like the mean squared error. Hence, it is something we would like to calculate the derivative of.
 
 Doing it component-wise would be no fun, so let's write \( \|M\|^2 \) as:
 
@@ -382,8 +393,8 @@ d(\|M\|^2) &= \operatorname{tr}(dM^T M + M^T dM) = \operatorname{tr}(dM^T M) + \
 \]
 
 There you go, that's the derivative of the squared Frobenius norm. It does not look like something
-multiplied with \( dM \), but that's just a limitation of matrices: matrix multiplication
-could only represent linear maps on vectors, not matrices. In fact, such a result could not even
+multiplied with \( dM \), but that's just a limitation of matrices: **matrix multiplication
+could only represent linear maps on vectors, not matrices**. In fact, such a result could not even
 exist (in non-trivial cases). If we can write \( d(\|M\|^2) = X d M \), then looking at the dimensions,
 there is an immediate paradox. If \( M \) is \( m \times n \)-dimensional, then the matrix
 multiplication must yield some \( \ldots \times n \)-dimensional matrix, and not a scalar!
@@ -401,7 +412,7 @@ So that's it for the first part of this blog series. Without having to resort to
 have developed a new theory for differentiation that works on all sort of vectors (not just
 the usual \( \mathbb{R}^n \)). Also, I think this should be stated sooner, I just could not find
 the space to, but this theory is based on that amazing lecture notes PDF. The total derivative
-is kind of invented by me (it's probably the result of me looking at similar notations and
+is kind of *invented* by me (it's probably the result of me looking at similar notations and
 finally getting a sense of that, to be honest). In the process,
 we have also discovered an ugly truth: not all derivatives can be represented using a clear and
 concise form like the Jacobian matrix, as demonstrated above. And of course, treating those
