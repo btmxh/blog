@@ -544,3 +544,31 @@ And hence, we arrive at the final form of the combine function:
 \[ c(x, y) = (x^p + y^p)^{1/p}. \]
 Hence, it turns out that the \(\mathcal{l}_p\) combine function is the only
 solutions to our problem! And with this, we have solved a four-year-old problem!
+
+## Wait, where is the \(\mathcal{l}_\infty\) norm?
+
+Basically, it is not an Archimedean \(t\)-norm, so it does not satisfy the
+representation theorem above. However, it turns out that the condition of
+homogeneity is very strong, and we can actually find every solution to the
+combine function problem.
+
+First, let's rewrite our functional equation as one for the \(t\)-norm:
+\[ T(x^\lambda, y^\lambda) = T(x, y)^\lambda. \]
+
+Assuming that \(T\) has an interior idempotent, i.e. some \(x \in (0, 1)\)
+such that \( T^2(x) = T(x, x) = x \). Then, for every \(y \in (0, 1)\), we have:
+\[ T(y, y) = T^2(x^{\log_x y}) = T^2(x)^{\log_x y} = x^{\log_x y} = y. \]
+So every \(y\) is an idempotent, which means \(T = \min\), corresponding to
+the \(\mathcal{l}_\infty\) norm solution.
+You can verify this via:
+\[ T(x, y) \geq T(x, x) = x = T(x, 1) \geq T(x, y), \]
+given \(x \leq y\).
+
+Otherwise, \(T\) has no interior idempotent, so it is Archimedean. Assuming that
+it is not, so there exists some \(x \in (0, 1)\) such that \(T^n(x) \to a > 0\)
+as \(n \to \infty\). Now, if we consider \(T^2 (a)\), then by the limiting
+property, it must be \(a\), so \(a\) is a idempotent, which is a contradiction
+to our assumption! With this, we can apply the above results to conclude that
+the combine function must be a \(\mathcal{l}_p\) norm defined above for some
+finite \(p\). Hence, combining the two cases, all valid combine functions must
+be in the form of the \(\mathcal{l}_p\) norm. QED.
