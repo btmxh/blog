@@ -3,6 +3,8 @@ date = '2025-07-16T02:57:33+07:00'
 title = 'combine.md'
 +++
 
+# Solving a four-year-old problem: finding all combine functions for NRS
+
 It was 2020. I was starting to switch from the "Cry = 10/10" rating system
 to a more systematic approach, as described in the title [Anime Rating Rework](https://docs.google.com/spreadsheets/d/1vJv8ojVT1ll6QzWc6JrYl_-vMdbIwaRK5ozxS3ShHOQ/edit?usp=sharing).
 With this, a brand new system for anime ranking, with its own complicated rules
