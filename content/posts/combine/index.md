@@ -209,6 +209,7 @@ any combine functions other than the \(\mathcal{l}_p\) functions above.
 ## \(t\)-norms: A leap of faith into the unknown
 
 The [Cult of Pure Maths](https://github.com/nrs-org/nrs-impl/discussions/625)
+(link dead after NRS discussions migrated to a personal Discord server)
 decided that one day, solving for this four-year-old problem is a good idea.
 Then, with the help of LLMs, I found out the words "homogeneity" to the problem
 in a search-engine-friendly manner. There, I discovered the concept of aggregate
