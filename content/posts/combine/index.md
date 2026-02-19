@@ -332,7 +332,7 @@ Given a \(t\)-norm \(T\), recall that we defined the \(n\)-th power of
 Trivially, we know that every \(T^n\) is increasing, and since \(T^n (0) = 0,
 T^n (1) = 1\), it maps the whole range \([0, 1]\) to itself. Furthermore, if we
 fix the input \(x\), it became decreasing with relation to \(n\):
-\[ T^n (x) = T(x, T^{n-1} (x)) <= T(1, T^{n-1}(x)) = T^{n-1} (x), \]
+\[ T^n (x) = T(x, T^{n-1} (x)) \leq T(1, T^{n-1}(x)) = T^{n-1} (x), \]
 so the there exists a limit:
 \[ T^\infty (x) = \lim_{n \to \infty} T^n (x). \]
 Furthermore, because of the Archimedean property, this limit must be 0, since if
@@ -342,17 +342,18 @@ Using this fact, we can prove that \(T\) strictly decreases the input, aside
 from the boundary case:
 \[ T(x, y) < x, \forall x, y \in (0, 1) \]
 Assuming otherwise, then \(T(x, y) = x\) for some \(y\). Then, by simple
-induction, we can prove that \(T(T^n (x), y) = x\). But when we take the limit, the
-left-hand side becomes \(T(T^\infty (x), y) = 0\), which is a contradiction.
+induction, we can prove that \(T(x, T^n (y)) = x\). But when we take the limit, the
+left-hand side becomes \(T(x, T^\infty (y)) = x\), which is a contradiction.
 Hence, we have: \(T(x, y) < \min \{x, y\}\).
-If we take \(y = x^n\), then we also have that powers of \(x\) strictly decrease
+If we take \(y = T^n (x)\), then we also have that powers of \(x\) strictly decrease
 until it reach 0.
 
-Now, we will prove that if \(T^n (x) > 0\), then \(T^n (y) < T^n (x)\).
+Now, we will prove that if \(T^n (x) > 0\), then \(T^n (y) < T^n (x)\) for every
+\(0 < y < x < 1\).
 This seems simple,
 but the proof is quite lengthy because of the strict inequality. Now, assuming
-the statement is false, so there exists some \(0 < y < x < 1, y^n \geq x^n >
-0\). Then, the idea is that there exists some \(z < 1\) such that
+the statement is false, so there exists some \(0 < y < x < 1, T^n (y) \geq T^n
+(x) > 0\). Then, the idea is that there exists some \(z < 1\) such that
 \[ y = T(x, z). \]
 This is due to the fact that \(T\) is continuous, and that
 \(T(x, 0) = 0\) and \(T(x, 1) = x\). Hence, this claim just follows from the
@@ -395,7 +396,7 @@ don't produce 0, so we have to manually define \(T^{1/n}\) there. To make \(T^{1
 continuous, we have to pick \(\alpha_n = \sup \{x \in [0, 1): T^n (x) = 0\}\).
 
 Then, let's try to prove the opposite of the properties of \(T^n\). First, we
-will prove that \(T^{-n} (x)\) is strictly increasing with relation to \(n\).
+will prove that \(T^{1/n} (x)\) is strictly increasing with relation to \(n\).
 Assuming otherwise, then there exists some \(x \in (0, 1)\) such that
 \[ T^{1/n} (x) \geq T^{1/(n+1)} (x). \]
 Then, excluding the trivial cases, we have:
@@ -574,3 +575,46 @@ to our assumption! With this, we can apply the above results to conclude that
 the combine function must be a \(\mathcal{l}_p\) norm defined above for some
 finite \(p\). Hence, combining the two cases, all valid combine functions must
 be in the form of the \(\mathcal{l}_p\) norm. QED.
+
+## Appendix: Signed combine function
+
+This was written much later, but for the longest time ever, I thought that such
+a well-defined combine function could only exist on the positive domain.
+However, it is possible to extend the construction of these combine functions to
+the negative realm without sacrificing the associativity property.
+
+You can easily derive \(c(1,-x)\) from calculating \(c(1,-x,x)\), but a much
+easier way to derive the signed combine function would be via extending
+the function \(g\) to the whole real domain, since \(c\) can be derived easily
+from \(g\). However, this does not guarantee finding all solutions, but you can
+manually derive \(c(1,-x)\) and show that it would yield only one class of solutions,
+which is precisely the one found via extending \(g\).
+
+Since \(c(x,-x)=0\) (because homogeneity),
+assuming \(g\) is defined in the negative region, we must have:
+\[ 0 = g(0) = g(x) + g(-x). \]
+
+This implies \(g(-x) = -g(x)\), or in other words, \(g\) is an odd function.
+An odd power function... That looks like \(x^{2k+1}\), but that only works for
+odd integer powers. However, you can actually find the closed form:
+\[
+g(x) = \operatorname{sign}(x) |x|^p,
+\]
+it would turn out to be an extremely "nice" function. Not only is it continuous,
+but it also has high-order derivatives for large (and integers) \(p\)'s (which is the
+case in my NRS implementation).
+
+With this, you can write the closed form of the two-parameter combine function
+as:
+\[
+c(x, y) = g^{-1}(g(x)+g(y)) = \operatorname{sign}(\operatorname{sign}(x)|x|^p +
+\operatorname{sign}(y)|y|^p)\left|\operatorname{sign}(x)|x|^p +
+\operatorname{sign}(y)|y|^p\right|^{1/p}
+\]
+
+Damn, that's lengthy... Clearly you should just define this based on the
+signed-power \(g\) function instead.
+
+Also, when \(p \to \infty\), \(c(x, y)\) will give you whatever argument has the
+higher absolute value, other than the case where \(x=-y\), then it would return
+0. So in a way, a "signed max by absolute value".
